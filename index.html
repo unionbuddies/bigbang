@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The eight stages of the Big Bang, from the singularity to the first stars — an animated cosmological sequence.">
+<title>The Big Bang — Eight Stages of Everything</title>
+
+<style>
+  @property --accent {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: #C39BFF;
+  }
+
+  :root {
+    --void:      #04050A;
+    --void-2:    #080A12;
+    --ink:       #EDE9E2;
+    --ink-dim:   #98A0B2;
+    --ink-faint: #59617440;
+
+    --accent: #C39BFF;
+    --glow:  color-mix(in oklab, var(--accent) 22%, transparent);
+    --wash:  color-mix(in oklab, var(--accent) 10%, transparent);
+
+    --display: "Futura", "Avenir Next", "Century Gothic", "URW Gothic", "Questrial", system-ui, sans-serif;
+    --serif:   "Iowan Old Style", "Charter", "Palatino Linotype", "Palatino", Georgia, serif;
+    --mono:    ui-monospace, "SF Mono", "IBM Plex Mono", "Roboto Mono", Menlo, monospace;
+
+    color-scheme: dark;
+    transition: --accent 1400ms cubic-bezier(.4,0,.2,1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: var(--void);
+    color: var(--ink);
+    font-family: var(--serif);
+    overflow: hidden;
+  }
+
+  /* ---------- stage ---------- */
+
+  #sky {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+  }
+
+  .vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 90% at 50% 42%, transparent 34%, rgba(4,5,10,.62) 100%),
+      linear-gradient(to top, rgba(4,5,10,.97) 0%, rgba(4,5,10,.94) 22%, rgba(4,5,10,.72) 40%, transparent 68%),
+      linear-gradient(to right, rgba(4,5,10,.86) 0%, rgba(4,5,10,.42) 38%, transparent 66%);
+  }
+
+  .shell {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: clamp(20px, 3.2vw, 46px);
+    pointer-events: none;
+  }
+  .shell > * { pointer-events: auto; }
+
+  /* ---------- masthead ---------- */
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .mark {
+    font-family: var(--display);
+    font-size: clamp(11px, 1.05vw, 13px);
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    line-height: 1.9;
+  }
+  .mark b {
+    display: block;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: .22em;
+  }
+
+  .tel {
+    display: grid;
+    gap: 7px;
+    justify-items: end;
+    min-width: 210px;
+  }
+  .tel-row {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: baseline;
+    gap: 14px;
+    width: 100%;
+    justify-content: end;
+  }
+  .tel .k {
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #5C6478;
+  }
+  .tel .v {
+    font-family: var(--mono);
+    font-size: clamp(11px, 1.1vw, 13px);
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    text-align: right;
+    min-width: 130px;
+    transition: color 1200ms ease;
+  }
+
+  /* ---------- narration ---------- */
+
+  main {
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: clamp(14px, 3vh, 34px);
+  }
+
+  .copy {
+    max-width: 52ch;
+    display: grid;
+    gap: 0;
+  }
+
+  .copy > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 900ms cubic-bezier(.2,.6,.2,1), transform 900ms cubic-bezier(.2,.6,.2,1);
+  }
+  .copy.in > *          { opacity: 1; transform: none; }
+  .copy.in .eyebrow     { transition-delay: 60ms; }
+  .copy.in .title       { transition-delay: 220ms; }
+  .copy.in .lede        { transition-delay: 480ms; }
+  .copy.in .yield       { transition-delay: 760ms; }
+  .copy.out > *         { opacity: 0; transform: translateY(-10px); transition-duration: 620ms; transition-delay: 0ms; }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--display);
+    font-size: clamp(10px, .95vw, 12px);
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 20px;
+  }
+  .eyebrow .idx {
+    font-family: var(--mono);
+    letter-spacing: .06em;
+    color: var(--accent);
+    transition: color 1200ms ease;
+  }
+  .eyebrow .bar {
+    flex: 0 0 34px;
+    height: 1px;
+    background: linear-gradient(to right, var(--accent), transparent);
+    transition: background 1200ms ease;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(2.4rem, 6.4vw, 4.9rem);
+    line-height: .96;
+    letter-spacing: -.02em;
+    text-wrap: balance;
+    margin: 0 0 22px;
+    color: var(--ink);
+    text-shadow: 0 0 68px var(--glow);
+  }
+
+  .lede {
+    font-size: clamp(1rem, 1.42vw, 1.17rem);
+    line-height: 1.66;
+    color: #C3C8D2;
+    margin: 0;
+    max-width: 46ch;
+  }
+
+  .yield {
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-top: 1px solid #2A3040;
+  }
+  .yield li {
+    padding: 14px 26px 0 0;
+    margin-right: 26px;
+    border-right: 1px solid #2A3040;
+  }
+  .yield li:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
+  .yield .el {
+    display: block;
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #5C6478;
+    margin-bottom: 5px;
+  }
+  .yield .amt {
+    font-family: var(--mono);
+    font-size: clamp(.95rem, 1.3vw, 1.1rem);
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    transition: color 1200ms ease;
+  }
+
+  /* ---------- transport ---------- */
+
+  footer {
+    display: grid;
+    gap: 15px;
+  }
+
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+  }
+
+  .node {
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: 0;
+    padding: 13px 0 0;
+    margin: 0;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    position: relative;
+    border-top: 1px solid #262C3A;
+    transition: border-color 500ms ease;
+  }
+  .node::after {
+    content: "";
+    position: absolute;
+    top: -1px; left: 0;
+    height: 1px;
+    width: 0;
+    background: var(--accent);
+    transition: width 120ms linear, background 1200ms ease;
+  }
+  .node.done::after { width: 100%; transition: width 500ms ease, background 1200ms ease; }
+
+  .node .nn {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #4E566A;
+    margin-bottom: 4px;
+    font-variant-numeric: tabular-nums;
+    transition: color 500ms ease;
+  }
+  .node .nl {
+    display: block;
+    font-family: var(--display);
+    font-size: clamp(9px, .82vw, 11px);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #626A7E;
+    line-height: 1.45;
+    transition: color 500ms ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .node:hover .nl,
+  .node:focus-visible .nl { color: var(--ink); }
+  .node.active .nn { color: var(--accent); }
+  .node.active .nl { color: var(--ink); }
+  .node:focus-visible { outline: 1px solid var(--accent); outline-offset: 5px; }
+
+  .transport {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .btn {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: 1px solid #2C3342;
+    border-radius: 999px;
+    color: var(--ink-dim);
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: color 260ms ease, border-color 260ms ease, background 260ms ease;
+  }
+  .btn:hover, .btn:focus-visible {
+    color: var(--ink);
+    border-color: var(--accent);
+    background: var(--wash);
+  }
+  .btn:focus-visible { outline: none; }
+
+  .elapsed {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #4E566A;
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 900px) {
+    .tel { min-width: 0; }
+    .tel .v { min-width: 96px; font-size: 11px; }
+    .copy { max-width: none; }
+    .rail { grid-template-columns: repeat(8, 1fr); gap: 4px; }
+    .node .nl { display: none; }
+    .node { padding-top: 9px; }
+  }
+
+  @media (max-width: 600px) {
+    header { flex-direction: column; gap: 14px; }
+    .tel { justify-items: start; }
+    .tel-row { justify-content: start; grid-template-columns: 92px auto; gap: 10px; }
+    .tel .v { text-align: left; }
+    .lede { font-size: .98rem; line-height: 1.6; }
+    .yield li { padding-right: 16px; margin-right: 16px; }
+    .elapsed { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy > * { transition-duration: 420ms; transform: none !important; }
+  }
+</style>
+
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="vignette"></div>
+
+<div class="shell">
+  <header>
+    <div class="mark">
+      <b>The Big Bang</b>
+      Eight stages of everything
+    </div>
+    <div class="tel">
+      <div class="tel-row"><span class="k">Cosmic time</span><span class="v" id="tTime">t = 0</span></div>
+      <div class="tel-row"><span class="k">Temperature</span><span class="v" id="tTemp">&gt; 10³² K</span></div>
+      <div class="tel-row"><span class="k">State</span><span class="v" id="tState">Singularity</span></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="copy" id="copy"></div>
+  </main>
+
+  <footer>
+    <div class="rail" id="rail"></div>
+    <div class="transport">
+      <button class="btn" id="playBtn" type="button">Pause</button>
+      <button class="btn" id="replayBtn" type="button">Replay</button>
+      <span class="elapsed" id="elapsed">Stage 1 / 8</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+
+  /* ============================ content ============================ */
+
+  const STAGES = [
+    {
+      n: "01", name: "The Singularity", label: "Singularity",
+      time: "t = 0", temp: "> 10³² K", state: "Singularity",
+      body: "Before the Big Bang, space, time, matter and energy did not exist as we know them. The entire universe was packed into a single point — infinitely small, infinitely dense, and unimaginably hot.",
+      accent: "#C39BFF", dur: 12000, sim: 0
+    },
+    {
+      n: "02", name: "Cosmic Inflation", label: "Inflation",
+      time: "10⁻³⁶ s", temp: "≈ 10²⁷ K", state: "Exponential expansion",
+      body: "A fraction of a second in, the universe underwent a super-charged growth spurt. Space itself expanded exponentially — from smaller than a subatomic particle to roughly the size of a soccer ball. The stretching smoothed the universe out and spread its energy evenly.",
+      accent: "#7FE9FF", dur: 12500, sim: 1
+    },
+    {
+      n: "03", name: "Energy Turns to Matter", label: "Matter",
+      time: "10⁻¹² s", temp: "≈ 10¹⁵ K", state: "Energy → matter",
+      body: "As inflation ended the expansion slowed, but the universe was still ferociously hot and filled with pure energy. As it began to cool, that energy transformed into physical matter.",
+      accent: "#FFD27A", dur: 11500, sim: 2
+    },
+    {
+      n: "04", name: "The Particle Soup", label: "Particle soup",
+      time: "1 s", temp: "≈ 10¹⁰ K", state: "Quarks bind into nucleons",
+      body: "The universe was a searing, dense soup of fundamental particles — quarks and electrons. As it cooled further, gravity and the strong nuclear force pulled the quarks together, binding them in groups of three to form the first protons and neutrons.",
+      accent: "#FF9E6B", dur: 13500, sim: 3
+    },
+    {
+      n: "05", name: "Cosmic Cooking", label: "Nucleosynthesis",
+      time: "≈ 180 s", temp: "≈ 10⁹ K", state: "Nucleosynthesis",
+      body: "The whole universe behaved like a giant nuclear reactor. Protons and neutrons smashed together and fused, forging the nuclei of the very first elements.",
+      yield: [["Hydrogen", "≈ 75%"], ["Helium", "≈ 25%"], ["Lithium", "trace"]],
+      accent: "#FFB454", dur: 14500, sim: 4
+    },
+    {
+      n: "06", name: "Clear Skies, First Light", label: "First light",
+      time: "380,000 yr", temp: "≈ 3,000 °C", state: "Recombination",
+      body: "Until now the universe was an opaque, glowing fog — free electrons scattered light and stopped it travelling. Once the temperature fell to about 3,000 °C, the nuclei finally captured those electrons to form complete, neutral atoms. The fog cleared instantly and light flashed across the universe for the first time. We still detect that ancient light today as the Cosmic Microwave Background.",
+      accent: "#FF7E7E", dur: 16500, sim: 5
+    },
+    {
+      n: "07", name: "The Cosmic Dark Ages", label: "Dark ages",
+      time: "≈ 10⁸ yr", temp: "≈ 60 K", state: "Neutral gas, no stars",
+      body: "With the fog cleared and no stars yet born, the universe entered a period of total darkness. Vast, invisible clouds of hydrogen and helium gas drifted through space.",
+      accent: "#6E7C99", dur: 11500, sim: 6
+    },
+    {
+      n: "08", name: "Gravity Ignites the Stars", label: "First stars",
+      time: "> 10⁸ yr", temp: "core ≈ 10⁷ K", state: "First stars & galaxies",
+      body: "Over millions of years gravity drew those massive gas clouds tighter and tighter. Their centres grew hotter and denser until nuclear fusion ignited — lighting the very first stars, and with them the first galaxies.",
+      accent: "#A8CBFF", dur: 15000, sim: 7
+    }
+  ];
+
+  /* ============================ canvas ============================ */
+
+  const cv = document.getElementById("sky");
+  const ctx = cv.getContext("2d", { alpha: false });
+  let W = 0, H = 0, CX = 0, CY = 0, R = 0, DPR = 1;
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    cv.width = Math.round(W * DPR);
+    cv.height = Math.round(H * DPR);
+    cv.style.width = W + "px";
+    cv.style.height = H + "px";
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    CX = W / 2;
+    CY = H / 2;
+    R = Math.hypot(W, H) / 2;
+    if (stage >= 0) initSim(stage);
+  }
+
+  /* pre-rendered radial glow sprites — far cheaper than shadowBlur */
+  const sprites = new Map();
+  function sprite(rgb) {
+    const key = rgb[0] + "," + rgb[1] + "," + rgb[2];
+    let s = sprites.get(key);
+    if (s) return s;
+    const size = 64, c = document.createElement("canvas");
+    c.width = c.height = size;
+    const g = c.getContext("2d");
+    const grd = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    grd.addColorStop(0.00, `rgba(${key},1)`);
+    grd.addColorStop(0.18, `rgba(${key},.80)`);
+    grd.addColorStop(0.45, `rgba(${key},.24)`);
+    grd.addColorStop(1.00, `rgba(${key},0)`);
+    g.fillStyle = grd;
+    g.fillRect(0, 0, size, size);
+    sprites.set(key, c);
+    return c;
+  }
+
+  function blob(x, y, rad, rgb, alpha) {
+    const s = sprite(rgb);
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(s, x - rad, y - rad, rad * 2, rad * 2);
+    ctx.globalAlpha = 1;
+  }
+
+  const hexRgb = h => [
+    parseInt(h.slice(1, 3), 16),
+    parseInt(h.slice(3, 5), 16),
+    parseInt(h.slice(5, 7), 16)
+  ];
+  const rnd  = (a, b) => a + Math.random() * (b - a);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const easeIn  = t => t * t * t;
+  const smooth  = t => t * t * (3 - 2 * t);
+
+  const WHITE  = [255, 246, 232];
+  const NEUTRON= [150, 160, 180];
+
+  /* ============================ particles ============================ */
+
+  let P = [];
+  let accentRgb = hexRgb(STAGES[0].accent);
+  let flash = 0;
+
+  function initSim(i) {
+    const s = STAGES[i];
+    accentRgb = hexRgb(s.accent);
+    P = [];
+    flash = 0;
+    const scale = Math.min(W, H);
+
+    switch (s.sim) {
+
+      /* 0 — singularity: everything spiralling into one point */
+      case 0:
+        for (let k = 0; k < 460; k++) {
+          P.push({
+            ang: rnd(0, TAU),
+            rad: rnd(0.06, 1.05) * R,
+            sp:  rnd(0.55, 1.6),
+            sz:  rnd(0.7, 2.1),
+            a:   rnd(0.18, 0.7)
+          });
+        }
+        break;
+
+      /* 1 — inflation: exponential runaway from a point, then smoothing */
+      case 1:
+        for (let k = 0; k < 620; k++) {
+          const ang = rnd(0, TAU);
+          P.push({
+            ang,
+            r0:  rnd(0.15, 1) * 0.0006 * R,
+            px: CX, py: CY,
+            ex:  CX + Math.cos(ang) * rnd(0.05, 0.95) * R * 0.78,
+            ey:  CY + Math.sin(ang) * rnd(0.05, 0.95) * R * 0.78,
+            sz:  rnd(0.9, 2.6),
+            a:   rnd(0.35, 1)
+          });
+        }
+        break;
+
+      /* 2 — energy condensing into matter */
+      case 2:
+        for (let k = 0; k < 190; k++) {
+          const ang = rnd(0, TAU);
+          const d = Math.sqrt(Math.random()) * R * 0.92;
+          P.push({
+            x: CX + Math.cos(ang) * d,
+            y: CY + Math.sin(ang) * d * 0.72,
+            dir: ang + rnd(-0.35, 0.35),        /* radiating outward, not random noise */
+            len: rnd(22, 64) * (scale / 900),
+            sz:  rnd(0.8, 1.8),
+            ph:  rnd(0, TAU),
+            sp:  rnd(0.4, 1.3),
+            a:   rnd(0.18, 0.5)
+          });
+        }
+        break;
+
+      /* 3 — quark soup binding into triplets */
+      case 3: {
+        const groups = 96;
+        for (let g = 0; g < groups; g++) {
+          const ang = rnd(0, TAU);
+          const d = Math.sqrt(Math.random()) * R * 0.8;
+          const gx = CX + Math.cos(ang) * d;
+          const gy = CY + Math.sin(ang) * d * 0.74;
+          for (let q = 0; q < 3; q++) {
+            P.push({
+              kind: "q",
+              x: gx + rnd(-90, 90), y: gy + rnd(-90, 90),
+              gx, gy,
+              ox: Math.cos(q / 3 * TAU) * 7, oy: Math.sin(q / 3 * TAU) * 7,
+              lead: q === 0,
+              ph: rnd(0, TAU), sp: rnd(0.6, 1.5),
+              sz: rnd(1.4, 2.4)
+            });
+          }
+        }
+        for (let k = 0; k < 150; k++) {
+          const ang = rnd(0, TAU);
+          const d = Math.sqrt(Math.random()) * R * 0.9;
+          P.push({
+            kind: "e",
+            x: CX + Math.cos(ang) * d, y: CY + Math.sin(ang) * d * 0.74,
+            vx: rnd(-1.6, 1.6), vy: rnd(-1.6, 1.6),
+            sz: rnd(0.6, 1.2)
+          });
+        }
+        break;
+      }
+
+      /* 4 — nucleosynthesis: nucleons fuse into helium nuclei */
+      case 4: {
+        const pairs = 34;
+        for (let g = 0; g < pairs; g++) {
+          const ang = rnd(0, TAU);
+          const d = Math.sqrt(Math.random()) * R * 0.72;
+          const gx = CX + Math.cos(ang) * d;
+          const gy = CY + Math.sin(ang) * d * 0.74;
+          const at = rnd(0.15, 0.78);
+          for (let q = 0; q < 4; q++) {
+            P.push({
+              kind: "fuse", neutron: q > 1,
+              x: gx + rnd(-160, 160), y: gy + rnd(-160, 160),
+              gx, gy,
+              ox: Math.cos(q / 4 * TAU + 0.4) * 6.5,
+              oy: Math.sin(q / 4 * TAU + 0.4) * 6.5,
+              at, lead: q === 0,
+              sz: rnd(2, 3.1), ph: rnd(0, TAU)
+            });
+          }
+        }
+        for (let k = 0; k < 210; k++) {
+          const ang = rnd(0, TAU);
+          const d = Math.sqrt(Math.random()) * R * 0.94;
+          P.push({
+            kind: "h",
+            x: CX + Math.cos(ang) * d, y: CY + Math.sin(ang) * d * 0.74,
+            vx: rnd(-0.5, 0.5), vy: rnd(-0.5, 0.5),
+            sz: rnd(1.5, 2.6), ph: rnd(0, TAU)
+          });
+        }
+        break;
+      }
+
+      /* 5 — recombination: fog clears, first light escapes */
+      case 5: {
+        for (let k = 0; k < 200; k++) {
+          const ang = rnd(0, TAU);
+          const d = Math.sqrt(Math.random()) * R * 0.92;
+          P.push({
+            kind: "nuc",
+            x: CX + Math.cos(ang) * d, y: CY + Math.sin(ang) * d * 0.74,
+            sz: rnd(1.6, 2.7)
+          });
+        }
+        for (let k = 0; k < 260; k++) {
+          const ang = rnd(0, TAU);
+          const d = Math.sqrt(Math.random()) * R * 0.95;
+          P.push({
+            kind: "el",
+            x: CX + Math.cos(ang) * d, y: CY + Math.sin(ang) * d * 0.74,
+            vx: rnd(-3.4, 3.4), vy: rnd(-3.4, 3.4),
+            host: k % 200,
+            sz: rnd(0.7, 1.3)
+          });
+        }
+        for (let k = 0; k < 46; k++) {
+          P.push({
+            kind: "cmb",
+            x: rnd(0, W), y: rnd(0, H),
+            rad: rnd(70, 230),
+            warm: Math.random() > 0.5,
+            ph: rnd(0, TAU)
+          });
+        }
+        break;
+      }
+
+      /* 6 — dark ages: invisible gas, almost nothing to see */
+      case 6:
+        for (let k = 0; k < 22; k++) {
+          P.push({
+            kind: "gas",
+            x: rnd(-0.1, 1.1) * W, y: rnd(-0.1, 1.1) * H,
+            rad: rnd(140, 380),
+            vx: rnd(-0.09, 0.09), vy: rnd(-0.06, 0.06),
+            a: rnd(0.03, 0.085), ph: rnd(0, TAU)
+          });
+        }
+        for (let k = 0; k < 90; k++) {
+          P.push({ kind: "dust", x: rnd(0, W), y: rnd(0, H), sz: rnd(0.4, 0.9), a: rnd(0.03, 0.12), ph: rnd(0, TAU) });
+        }
+        break;
+
+      /* 7 — first stars ignite out of collapsing clouds */
+      case 7:
+        for (let k = 0; k < 30; k++) {
+          P.push({
+            kind: "cloud",
+            x: rnd(0.04, 0.96) * W, y: rnd(0.05, 0.95) * H,
+            rad: rnd(70, 190),
+            at: rnd(0.10, 0.80),
+            ph: rnd(0, TAU)
+          });
+        }
+        for (let k = 0; k < 340; k++) {
+          P.push({
+            kind: "star",
+            x: rnd(0, W), y: rnd(0, H),
+            sz: rnd(0.5, 1.9),
+            at: rnd(0.3, 1),
+            ph: rnd(0, TAU)
+          });
+        }
+        break;
+    }
+  }
+
+  /* ============================ per-stage rendering ============================ */
+
+  function render(sim, t, now) {
+    /* trails: partial clear rather than full wipe */
+    const trail = [0.20, 0.13, 0.22, 0.30, 0.30, 0.28, 0.45, 0.22][sim];
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = `rgba(4,5,10,${trail})`;
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = "lighter";
+
+    const A = accentRgb;
+    const scale = Math.min(W, H);
+
+    switch (sim) {
+
+      case 0: {                                     /* singularity */
+        for (const p of P) {
+          p.ang += (0.0016 + 0.02 * (1 - p.rad / R)) * p.sp;
+          p.rad -= (0.4 + t * 3.4) * p.sp;
+          if (p.rad < 3) { p.rad = R * rnd(0.75, 1.1); p.ang = rnd(0, TAU); }
+          const x = CX + Math.cos(p.ang) * p.rad;
+          const y = CY + Math.sin(p.ang) * p.rad * 0.78;
+          const near = 1 - clamp01(p.rad / R);
+          blob(x, y, p.sz * (1 + near * 2.6), A, p.a * (0.25 + near * 0.75) * (0.5 + t * 0.5));
+        }
+        const core = 8 + Math.pow(t, 2.2) * scale * 0.16;
+        const puls = 1 + Math.sin(now * 0.0032) * 0.07;
+        blob(CX, CY, core * 2.6 * puls, A, 0.30 + t * 0.30);
+        blob(CX, CY, core * puls, WHITE, 0.85);
+        blob(CX, CY, core * 0.34, [255, 255, 255], 1);
+        break;
+      }
+
+      case 1: {                                     /* inflation */
+        const a = Math.pow(2, easeOut(t) * 11.2);          /* scale factor */
+        const settle = clamp01((t - 0.62) / 0.38);
+        for (const p of P) {
+          const r = Math.min(p.r0 * a, R * 1.25);
+          let x = CX + Math.cos(p.ang) * r;
+          let y = CY + Math.sin(p.ang) * r * 0.8;
+          if (settle > 0) {                                 /* smoothed, even distribution */
+            const s = smooth(settle);
+            x = lerp(x, p.ex, s);
+            y = lerp(y, p.ey, s);
+          }
+          ctx.strokeStyle = `rgba(${A[0]},${A[1]},${A[2]},${p.a * 0.5 * (1 - settle * 0.65)})`;
+          ctx.lineWidth = p.sz * 0.7;
+          ctx.beginPath();
+          ctx.moveTo(p.px, p.py);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+          blob(x, y, p.sz * (1.6 + settle * 1.2), A, p.a * (0.45 + settle * 0.55));
+          p.px = x; p.py = y;
+        }
+        const burst = Math.max(0, 1 - t * 5);
+        if (burst > 0) blob(CX, CY, scale * 0.2 * burst + 20, WHITE, burst);
+        break;
+      }
+
+      case 2: {                                     /* energy → matter */
+        const cond = smooth(clamp01((t - 0.12) / 0.72));
+        for (const p of P) {
+          p.ph += 0.02 * p.sp;
+          const L = p.len * (1 - cond);
+          const dx = Math.cos(p.dir + Math.sin(p.ph) * 0.5);
+          const dy = Math.sin(p.dir + Math.sin(p.ph) * 0.5);
+          const wob = Math.sin(p.ph * 1.6) * 5 * (1 - cond);
+          const x = p.x + dx * wob, y = p.y + dy * wob;
+          if (L > 1) {                                       /* energy: a stretched wave */
+            const g = ctx.createLinearGradient(x - dx * L / 2, y - dy * L / 2, x + dx * L / 2, y + dy * L / 2);
+            g.addColorStop(0, `rgba(${A[0]},${A[1]},${A[2]},0)`);
+            g.addColorStop(0.5, `rgba(255,238,214,${p.a * (1 - cond * 0.55)})`);
+            g.addColorStop(1, `rgba(${A[0]},${A[1]},${A[2]},0)`);
+            ctx.strokeStyle = g;
+            ctx.lineWidth = p.sz * 0.9;
+            ctx.beginPath();
+            ctx.moveTo(x - dx * L / 2, y - dy * L / 2);
+            ctx.lineTo(x + dx * L / 2, y + dy * L / 2);
+            ctx.stroke();
+          }
+          if (cond > 0.02) blob(x, y, p.sz * (1.6 + cond * 2.4), A, cond * (0.35 + p.a)); /* matter: a solid grain */
+        }
+        break;
+      }
+
+      case 3: {                                     /* quark soup → nucleons */
+        const bind = smooth(clamp01((t - 0.26) / 0.6));
+        for (const p of P) {
+          if (p.kind === "e") {
+            p.x += p.vx * (1 - bind * 0.6); p.y += p.vy * (1 - bind * 0.6);
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+            blob(p.x, p.y, p.sz * 2.2, [150, 200, 255], 0.55);
+          } else {
+            p.ph += 0.05 * p.sp;
+            const jx = Math.cos(p.ph) * 26 * (1 - bind);
+            const jy = Math.sin(p.ph * 1.3) * 26 * (1 - bind);
+            const tx = lerp(p.x, p.gx + p.ox, bind);
+            const ty = lerp(p.y, p.gy + p.oy, bind);
+            const x = tx + jx, y = ty + jy;
+            blob(x, y, p.sz * (2 - bind * 0.5), A, 0.75);
+            if (p.lead && bind > 0.35) {                    /* the nucleon's binding shell */
+              const k = (bind - 0.35) / 0.65;
+              ctx.strokeStyle = `rgba(${A[0]},${A[1]},${A[2]},${k * 0.34})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.arc(p.gx, p.gy, 13 + Math.sin(p.ph * 0.6) * 1.2, 0, TAU);
+              ctx.stroke();
+            }
+          }
+        }
+        break;
+      }
+
+      case 4: {                                     /* nucleosynthesis */
+        for (const p of P) {
+          if (p.kind === "h") {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > W) p.vx *= -1;
+            if (p.y < 0 || p.y > H) p.vy *= -1;
+            p.ph += 0.03;
+            blob(p.x, p.y, p.sz * 2.1, A, 0.55 + Math.sin(p.ph) * 0.12);
+          } else {
+            const k = smooth(clamp01((t - p.at) / 0.16));
+            const x = lerp(p.x, p.gx + p.ox, k);
+            const y = lerp(p.y, p.gy + p.oy, k);
+            const col = p.neutron ? NEUTRON : A;
+            blob(x, y, p.sz * 1.9, col, 0.7);
+            if (p.lead) {
+              const fuseAge = (t - p.at) / 0.16;
+              if (fuseAge > 0.85 && fuseAge < 1.9) {         /* the moment of fusion */
+                const f = 1 - clamp01((fuseAge - 0.85) / 1.05);
+                blob(p.gx, p.gy, 14 + 62 * (1 - f), WHITE, f * 0.85);
+              }
+              if (k > 0.98) blob(p.gx, p.gy, 17, WHITE, 0.16);
+            }
+          }
+        }
+        break;
+      }
+
+      case 5: {                                     /* recombination */
+        const capture = smooth(clamp01((t - 0.30) / 0.22));
+        const fog = 1 - smooth(clamp01((t - 0.34) / 0.26));
+        const nuclei = P.filter(p => p.kind === "nuc");
+
+        for (const p of P) {
+          if (p.kind === "cmb") {                            /* the relic pattern, always faint */
+            if (t > 0.62) {
+              const k = clamp01((t - 0.62) / 0.38);
+              const col = p.warm ? [255, 140, 130] : [120, 150, 255];
+              blob(p.x, p.y, p.rad, col, 0.045 * k);
+            }
+          } else if (p.kind === "nuc") {
+            blob(p.x, p.y, p.sz * 2, A, 0.55 + fog * 0.3);
+          } else {                                            /* free electrons, then captured */
+            if (capture < 1) {
+              p.x += p.vx * (1 - capture); p.y += p.vy * (1 - capture);
+              if (p.x < 0 || p.x > W) p.vx *= -1;
+              if (p.y < 0 || p.y > H) p.vy *= -1;
+            }
+            const host = nuclei[p.host % nuclei.length];
+            const ang = now * 0.004 + p.host;
+            const ox = host.x + Math.cos(ang) * 9;
+            const oy = host.y + Math.sin(ang) * 9;
+            const x = lerp(p.x, ox, capture);
+            const y = lerp(p.y, oy, capture);
+            blob(x, y, p.sz * 1.9, [170, 210, 255], 0.5 + (1 - capture) * 0.4);
+          }
+        }
+
+        if (fog > 0.005) {                                    /* the opaque scattering fog */
+          ctx.globalCompositeOperation = "source-over";
+          ctx.fillStyle = `rgba(${A[0]},${A[1]},${A[2]},${fog * 0.30})`;
+          ctx.fillRect(0, 0, W, H);
+          ctx.globalCompositeOperation = "lighter";
+          for (let k = 0; k < 9; k++) {
+            const a2 = now * 0.00012 + k;
+            blob(CX + Math.cos(a2) * W * 0.34, CY + Math.sin(a2 * 1.4) * H * 0.34,
+                 scale * 0.44, [255, 226, 210], fog * 0.10);
+          }
+        }
+
+        if (t > 0.48 && t < 0.94) {                           /* first light, released */
+          const k = (t - 0.48) / 0.46;
+          const rr = easeOut(k) * R * 2.1;
+          const al = (1 - k) * 0.55;
+          ctx.strokeStyle = `rgba(255,250,242,${al})`;
+          ctx.lineWidth = 2 + 26 * (1 - k);
+          ctx.beginPath();
+          ctx.ellipse(CX, CY, rr, rr * 0.82, 0, 0, TAU);
+          ctx.stroke();
+          if (k < 0.13) blob(CX, CY, scale * 0.6 * (1 - k / 0.13), WHITE, (1 - k / 0.13) * 0.75);
+        }
+        break;
+      }
+
+      case 6: {                                     /* dark ages */
+        for (const p of P) {
+          if (p.kind === "gas") {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < -p.rad) p.x = W + p.rad;
+            if (p.x > W + p.rad) p.x = -p.rad;
+            if (p.y < -p.rad) p.y = H + p.rad;
+            if (p.y > H + p.rad) p.y = -p.rad;
+            p.ph += 0.004;
+            blob(p.x, p.y, p.rad * (1 + Math.sin(p.ph) * 0.05), A, p.a * (0.55 + t * 0.45));
+          } else {
+            p.ph += 0.01;
+            blob(p.x, p.y, p.sz * 2, A, p.a * (0.6 + Math.sin(p.ph) * 0.4));
+          }
+        }
+        break;
+      }
+
+      case 7: {                                     /* first stars & galaxies */
+        for (const p of P) {
+          if (p.kind === "cloud") {
+            const k = clamp01((t - p.at + 0.25) / 0.5);
+            const rad = p.rad * (1 - k * 0.72);
+            p.ph += 0.006;
+            blob(p.x, p.y, rad, [110, 124, 153], 0.075 * (1 - k * 0.45));
+            if (t > p.at) {                                   /* ignition */
+              const g = clamp01((t - p.at) / 0.2);
+              const core = 1.8 + g * 4.2;
+              blob(p.x, p.y, core * 7, A, 0.16 * g);
+              blob(p.x, p.y, core * 2.4, A, 0.34 * g);
+              blob(p.x, p.y, core, WHITE, 0.95 * g);
+              const spike = core * (9 + Math.sin(p.ph * 3) * 1.2) * g;
+              ctx.strokeStyle = `rgba(255,250,240,${0.26 * g})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(p.x - spike, p.y); ctx.lineTo(p.x + spike, p.y);
+              ctx.moveTo(p.x, p.y - spike * 0.62); ctx.lineTo(p.x, p.y + spike * 0.62);
+              ctx.stroke();
+            }
+          } else {
+            if (t < p.at) continue;
+            const g = clamp01((t - p.at) / 0.18);
+            p.ph += 0.03;
+            const tw = 0.62 + Math.sin(p.ph) * 0.38;
+            blob(p.x, p.y, p.sz * 2.4, A, g * tw * 0.85);
+          }
+        }
+        break;
+      }
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  /* ============================ sequencer ============================ */
+
+  const copyEl   = document.getElementById("copy");
+  const railEl   = document.getElementById("rail");
+  const playBtn  = document.getElementById("playBtn");
+  const replayBtn= document.getElementById("replayBtn");
+  const elapsedEl= document.getElementById("elapsed");
+  const tTime    = document.getElementById("tTime");
+  const tTemp    = document.getElementById("tTemp");
+  const tState   = document.getElementById("tState");
+
+  let stage = -1;
+  let stageStart = 0;
+  let playing = true;
+  let outFired = false;
+  let raf = 0;
+
+  /* build the rail once */
+  const nodes = STAGES.map((s, i) => {
+    const b = document.createElement("button");
+    b.className = "node";
+    b.type = "button";
+    b.innerHTML = `<span class="nn">${s.n}</span><span class="nl">${s.label}</span>`;
+    b.setAttribute("aria-label", `Stage ${s.n}: ${s.name}`);
+    b.addEventListener("click", () => {          /* jumping to a stage means you want to watch it */
+      playing = true;
+      playBtn.textContent = "Pause";
+      go(i);
+    });
+    railEl.appendChild(b);
+    return b;
+  });
+
+  function paintCopy(s) {
+    const y = s.yield
+      ? `<ul class="yield">${s.yield.map(([el, amt]) =>
+          `<li><span class="el">${el}</span><span class="amt">${amt}</span></li>`).join("")}</ul>`
+      : "";
+    copyEl.className = "copy";
+    copyEl.innerHTML =
+      `<div class="eyebrow"><span class="idx">${s.n}</span><span class="bar"></span><span>${s.time}</span></div>` +
+      `<h2 class="title">${s.name}</h2>` +
+      `<p class="lede">${s.body}</p>` + y;
+    requestAnimationFrame(() => requestAnimationFrame(() => copyEl.classList.add("in")));
+  }
+
+  function go(i) {
+    stage = i;
+    const s = STAGES[i];
+    stageStart = performance.now();
+    outFired = false;
+
+    document.documentElement.style.setProperty("--accent", s.accent);
+    tTime.textContent  = s.time;
+    tTemp.textContent  = s.temp;
+    tState.textContent = s.state;
+    elapsedEl.textContent = `Stage ${i + 1} / ${STAGES.length}`;
+
+    nodes.forEach((n, k) => {
+      n.classList.toggle("active", k === i);
+      n.classList.toggle("done", k < i);
+      n.querySelector(".nn").style.opacity = k <= i ? "1" : ".55";
+    });
+
+    paintCopy(s);
+    initSim(i);
+    if (REDUCED) render(s.sim, 0.7, performance.now());   /* one held frame, no churn */
+  }
+
+  function tick(now) {
+    raf = requestAnimationFrame(tick);
+    const s = STAGES[stage];
+    const t = clamp01((now - stageStart) / s.dur);
+
+    if (!REDUCED) render(s.sim, t, now);
+
+    setFill(stage, t);
+
+    const isLast = stage === STAGES.length - 1;
+
+    if (playing) {
+      /* the closing stage keeps its text — there is nothing to hand off to */
+      if (t > 0.93 && !outFired && !isLast) { copyEl.classList.add("out"); outFired = true; }
+      if (t >= 1) {
+        if (!isLast) go(stage + 1);
+        else { playing = false; playBtn.textContent = "Play"; nodes[stage].classList.add("done"); }
+      }
+    } else if (t >= 1) {
+      stageStart = now - s.dur;   /* hold at the end of the stage while paused */
+    }
+  }
+
+  /* the active node's progress fill (::after width can't be set inline, so use a CSS var proxy) */
+  const fillStyle = document.createElement("style");
+  document.head ? document.head.appendChild(fillStyle) : document.body.appendChild(fillStyle);
+  function setFill(i, t) {
+    fillStyle.textContent = `.node:nth-child(${i + 1})::after{width:${(t * 100).toFixed(1)}%}`;
+  }
+
+  playBtn.addEventListener("click", () => {
+    if (!playing && stage === STAGES.length - 1 &&
+        (performance.now() - stageStart) / STAGES[stage].dur >= 1) {
+      go(0); playing = true; playBtn.textContent = "Pause"; return;
+    }
+    playing = !playing;
+    playBtn.textContent = playing ? "Pause" : "Play";
+    /* paused mid-fade: bring the text back so it can still be read */
+    if (!playing && outFired) {
+      copyEl.classList.remove("out");
+      outFired = false;
+      stageStart = performance.now() - STAGES[stage].dur * 0.90;
+    }
+  });
+
+  replayBtn.addEventListener("click", () => {
+    playing = true;
+    playBtn.textContent = "Pause";
+    go(0);
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === " ") { e.preventDefault(); playBtn.click(); }
+    else if (e.key === "ArrowRight" && stage < STAGES.length - 1) go(stage + 1);
+    else if (e.key === "ArrowLeft" && stage > 0) go(stage - 1);
+  });
+
+  window.addEventListener("resize", resize);
+
+  resize();
+  go(0);
+  raf = requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
