@@ -138,7 +138,8 @@
     display: flex;
     align-items: flex-start;              /* text sits high, just under the header */
     padding-top: clamp(8px, 2vh, 30px);
-    min-height: 0;
+    min-height: 0;                        /* allow the row to shrink so .copy can scroll */
+    overflow: hidden;
   }
 
   .copy {
@@ -146,7 +147,38 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    /* if the text is taller than the space, scroll it instead of hiding it under
+       the footer — the last line is always reachable */
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 16px;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--accent) 55%, transparent) transparent;
+    overscroll-behavior: contain;
   }
+  .copy::-webkit-scrollbar { width: 5px; }
+  .copy::-webkit-scrollbar-track { background: transparent; }
+  .copy::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--accent) 55%, transparent);
+    border-radius: 3px;
+  }
+  /* a soft cue, pinned to the visible bottom edge of the scroll area itself,
+     that there's more to read below — stays put while the text scrolls past it */
+  .copy::after {
+    content: "";
+    display: block;
+    position: sticky;
+    bottom: 0;
+    height: 56px;
+    margin-top: -56px;
+    pointer-events: none;
+    background: linear-gradient(to top, var(--void) 14%, transparent);
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .copy.has-more::after { opacity: 1; }
 
   .copy > * {
     opacity: 0;
@@ -376,7 +408,9 @@
     .tel { justify-items: start; }
     .tel-row { justify-content: start; grid-template-columns: 110px auto; gap: 10px; }
     .tel .v { text-align: left; }
-    main { padding-top: 10px; }
+    /* reserve the arrow band as dead space below the scrollable text, so the
+       last line can never end up hidden behind the fixed arrow buttons */
+    main { padding-top: 10px; padding-bottom: 108px; }
     .copy { max-width: none; }
     .title { font-size: clamp(2.6rem, 12vw, 3.4rem); }
     .lede { font-size: 1.2rem; line-height: 1.5; max-width: none; }
@@ -445,57 +479,57 @@
   const STAGES = [
     {
       n: "01", name: "The Singularity", label: "Singularity",
-      time: "The very start", temp: "Hotter than anything", state: "A single point",
-      body: "Before the Big Bang there was no space and no time. Everything that would ever exist was squeezed into a single point far smaller than an atom — unimaginably hot, and packed together beyond belief.",
+      time: "t = 0", temp: "> 10³² K", state: "Singularity",
+      body: "Before the Big Bang there was no space and no time. Everything that would ever exist — every star, every planet, every atom in your body — was squeezed into a single point far smaller than an atom. It was unimaginably hot and impossibly dense. This starting point is called a singularity, and it is where our normal rules of physics stop working. We cannot even really ask what came before it, because time itself had not started yet.",
       accent: "#C39BFF", dur: 12000, sim: 0
     },
     {
       n: "02", name: "The Great Stretch", label: "Inflation",
-      time: "A tiny flash later", temp: "Cooling fast", state: "Space balloons outward",
-      body: "In the tiniest sliver of a second, the universe suddenly ballooned outward — from smaller than a speck to about the size of a beach ball, almost instantly. This huge stretch spread everything out smoothly and evenly.",
+      time: "10⁻³⁶ s", temp: "≈ 10²⁷ K", state: "Exponential expansion",
+      body: "In the tiniest sliver of a second — far less than a blink — the universe suddenly ballooned outward. It grew from smaller than a speck to about the size of a beach ball almost instantly, stretching faster than light itself. This growth spurt is called inflation. It smoothed everything out and spread energy evenly in every direction, which is why the universe still looks so similar everywhere we point our telescopes today.",
       accent: "#7FE9FF", dur: 12500, sim: 1
     },
     {
       n: "03", name: "Energy Becomes Stuff", label: "First matter",
-      time: "Still the first second", temp: "Blazing hot", state: "Energy turns to matter",
-      body: "The universe was still incredibly hot and full of pure energy. As it slowly cooled, some of that energy began turning into the very first tiny bits of solid matter.",
+      time: "10⁻¹² s", temp: "≈ 10¹⁵ K", state: "Energy → matter",
+      body: "The universe was still blazingly hot and filled with pure energy. As it began to cool, that energy started turning into tiny bits of matter — the very first physical 'stuff'. Matter and its mirror image, antimatter, kept appearing in pairs and destroying each other on contact. For reasons we still do not fully understand, a tiny bit more matter survived than antimatter. That leftover is every solid thing that exists today, including you.",
       accent: "#FFD27A", dur: 11500, sim: 2
     },
     {
       n: "04", name: "The Particle Soup", label: "Particle soup",
-      time: "About 1 second", temp: "Ten billion degrees", state: "First protons form",
-      body: "Everything was a thick, boiling soup of the smallest particles. As it cooled, tiny building blocks called quarks stuck together in threes — forming the first protons and neutrons, the cores of every future atom.",
+      time: "1 s", temp: "≈ 10¹⁰ K", state: "Quarks bind into protons",
+      body: "Everything was a thick, boiling soup of the smallest particles. Among them were quarks — tiny building blocks that cannot survive on their own. As the universe cooled, a powerful force glued the quarks together in groups of three. These little clumps became the first protons and neutrons: the cores of every atom that would ever form.",
       accent: "#FF9E6B", dur: 13500, sim: 3
     },
     {
       n: "05", name: "Cooking the First Elements", label: "First elements",
-      time: "About 3 minutes", temp: "A billion degrees", state: "Atoms' cores form",
-      body: "The whole universe acted like a giant furnace. Particles crashed together and fused, building the cores of the first elements.",
+      time: "≈ 3 min", temp: "≈ 10⁹ K", state: "The first nuclei form",
+      body: "For a few short minutes the whole universe behaved like a giant nuclear furnace. Protons and neutrons crashed into each other and stuck together, building the cores of the first elements. It only managed to make the lightest ones before cooling too much to carry on — mostly hydrogen and helium, with a tiny trace of lithium. Everything heavier would have to wait millions of years for stars to make it.",
       yield: [["Hydrogen", "75%"], ["Helium", "25%"], ["Lithium", "a trace"]],
       accent: "#FFB454", dur: 14500, sim: 4
     },
     {
       n: "06", name: "The First Light", label: "First light",
-      time: "380,000 years", temp: "About 3,000 °C", state: "The fog clears",
-      body: "Until now the universe was a glowing fog that trapped all light. As it cooled, the particles finally joined into complete atoms — and the fog cleared. Light streamed across space for the very first time. We can still see that ancient glow today.",
+      time: "380,000 yr", temp: "≈ 3,000 °C", state: "The fog clears",
+      body: "Until now the universe was a glowing fog. Loose particles kept scattering light in every direction, so it could not travel far and the whole universe was opaque. Then it cooled just enough for those particles to join into complete, stable atoms. The fog cleared all at once, and light streamed freely across space for the very first time. That ancient first light is still travelling today — we can detect it arriving from every direction in the sky.",
       accent: "#FF7E7E", dur: 16500, sim: 5
     },
     {
       n: "07", name: "The Dark Ages", label: "Dark ages",
-      time: "Millions of years", temp: "Cold and quiet", state: "No stars yet",
-      body: "There were still no stars anywhere. The universe was dark and silent — huge invisible clouds of gas drifting slowly through empty space.",
+      time: "≈ 100 million yr", temp: "≈ 60 K", state: "Neutral gas, no stars",
+      body: "With the fog gone but no stars yet born, the universe went dark and silent. Enormous invisible clouds of hydrogen and helium gas drifted slowly through empty space. Nothing shone anywhere. This quiet, starless stretch lasted for many millions of years — the longest, dullest chapter in the whole story, and the hardest one for astronomers to study, because there was almost nothing giving off light.",
       accent: "#6E7C99", dur: 11500, sim: 6
     },
     {
       n: "08", name: "The First Stars Switch On", label: "First stars",
-      time: "100 million years", temp: "Cores reignite", state: "Stars and galaxies",
-      body: "Gravity slowly pulled the gas clouds together. Their centres grew hotter and denser until they suddenly caught fire — the first stars switched on, lighting up the darkness and forming the first galaxies.",
+      time: "> 100 million yr", temp: "core ≈ 10⁷ K", state: "First stars & galaxies",
+      body: "Gravity slowly pulled the giant gas clouds together. As each cloud squeezed tighter, its centre grew hotter and denser — until it suddenly caught fire. The first stars switched on and flooded the darkness with light. These early stars were giants: they burned fast, died young, and gathered into the first galaxies. When they exploded, they scattered brand-new, heavier elements out into space.",
       accent: "#A8CBFF", dur: 15000, sim: 7
     },
     {
       n: "09", name: "Everything Since — and You", label: "Everything since",
-      time: "13.8 billion years", temp: "Cold, but full of light", state: "Galaxies, stars, and us",
-      body: "Stars were born and died over and over, each one making new elements. Around nine billion years later, one gas cloud collapsed into our Sun — and the leftover dust became the Earth, and eventually, you.",
+      time: "13.8 billion yr", temp: "2.7 K", state: "Galaxies, stars, and us",
+      body: "Stars were born and died over and over, and each generation forged new elements and scattered them when it died. Around nine billion years later, one ordinary cloud of that enriched gas collapsed to form our Sun. The leftover dust and debris clumped together into the planets — including the Earth. The same atoms, cooked inside long-dead stars, went on to become the oceans, the air, and every living thing. You are made of stardust.",
       accent: "#FFD9A0", dur: 17000, sim: 8
     }
   ];
@@ -1112,12 +1146,22 @@
           `<li><span class="el">${el}</span><span class="amt">${amt}</span></li>`).join("")}</ul>`
       : "";
     copyEl.className = "copy";
+    copyEl.scrollTop = 0;
     copyEl.innerHTML =
       `<div class="eyebrow"><span class="idx">${s.n}</span><span class="bar"></span><span>${s.time}</span></div>` +
       `<h2 class="title">${s.name}</h2>` +
       `<p class="lede">${s.body}</p>` + y;
     requestAnimationFrame(() => requestAnimationFrame(() => copyEl.classList.add("in")));
+    updateOverflowCue();          /* reading scrollHeight forces layout, so no rAF needed here */
   }
+
+  /* shows a bottom fade only while there's actually unread text below */
+  function updateOverflowCue() {
+    const has = copyEl.scrollHeight - copyEl.clientHeight > 4;
+    const atBottom = copyEl.scrollTop + copyEl.clientHeight >= copyEl.scrollHeight - 4;
+    copyEl.classList.toggle("has-more", has && !atBottom);
+  }
+  copyEl.addEventListener("scroll", updateOverflowCue, { passive: true });
 
   /* the rail node's fill (::after width can't be set inline, so drive it through a style tag) */
   const fillStyle = document.createElement("style");
@@ -1175,7 +1219,7 @@
     else if (e.key === "End") { e.preventDefault(); go(LAST); }
   });
 
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", () => { resize(); updateOverflowCue(); });
 
   resize();
   go(0);
