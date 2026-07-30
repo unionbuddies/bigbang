@@ -1,42 +1,35 @@
 # The Big Bang — Nine Stages of Everything
 
-An animated, auto-playing walkthrough of the Big Bang, from the singularity to
-the first stars and on to the present day.
+A visual, plain-language walkthrough of the Big Bang, from the singularity to
+the first stars and on to the present day. You move through it at your own
+pace — nothing is timed.
 
 Open `index.html` in a browser — no build step, no dependencies.
 
 ## The stages
 
-| # | Stage | Cosmic time |
-|---|-------|-------------|
-| 01 | The Singularity | t = 0 |
-| 02 | Cosmic Inflation | 10⁻³⁶ s |
-| 03 | Energy Turns to Matter | 10⁻¹² s |
-| 04 | The Particle Soup | 1 s |
-| 05 | Cosmic Cooking (nucleosynthesis) | ≈ 180 s |
-| 06 | Clear Skies, First Light | 380,000 yr |
-| 07 | The Cosmic Dark Ages | ≈ 10⁸ yr |
-| 08 | Gravity Ignites the Stars | > 10⁸ yr |
-| 09 | Everything Since | 13.8 billion yr |
+| # | Stage | When |
+|---|-------|------|
+| 01 | The Singularity | The very start |
+| 02 | The Great Stretch | A tiny flash later |
+| 03 | Energy Becomes Stuff | Still the first second |
+| 04 | The Particle Soup | About 1 second |
+| 05 | Cooking the First Elements | About 3 minutes |
+| 06 | The First Light | 380,000 years |
+| 07 | The Dark Ages | Millions of years |
+| 08 | The First Stars Switch On | 100 million years |
+| 09 | Everything Since — and You | 13.8 billion years |
 
-Each stage runs its own canvas simulation, and the page's accent colour tracks
-the actual temperature of the universe at that moment — violet-hot at the
-singularity, cooling through amber and rose, into the slate of the dark ages,
-out to the blue-white of the first starlight, and finally the warm gold of a
-sky full of galaxies.
+Each stage runs its own animation, and the page's accent colour tracks the
+temperature of the universe at that moment — violet-hot at the singularity,
+cooling through amber and rose, into the slate of the dark ages, out to the
+blue-white of the first starlight, and finally the warm gold of a sky full of
+galaxies.
 
-## Reading deeper
+## Moving around
 
-Every stage has a **Read more** panel with the physics behind it — why inflation
-was proposed, why nucleosynthesis stopped at lithium, how the Cosmic Microwave
-Background was found by accident. Opening it pauses the sequence so nothing
-advances mid-sentence.
+There is no timer — each stage's animation plays and then holds while you read.
 
-Key terms are underlined; hover, tap, or tab to them for a definition.
-
-## Controls
-
-- Plays automatically from stage 01
-- **Space** — pause / resume
-- **← →** — step between stages
-- Click any node on the bottom rail to jump to a stage
+- **Side arrows** — go back and forward a stage
+- **← →** keys — the same, from the keyboard (Home / End jump to the first / last)
+- Click any label on the bottom bar to jump straight to a stage

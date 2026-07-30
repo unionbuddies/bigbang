@@ -71,7 +71,8 @@
     z-index: 2;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    padding: clamp(20px, 3.2vw, 46px);
+    /* wide left/right gutters keep all content clear of the side arrows */
+    padding: clamp(20px, 3.2vw, 42px) clamp(88px, 9vw, 140px);
     pointer-events: none;
   }
   .shell > * { pointer-events: auto; }
@@ -116,18 +117,18 @@
   }
   .tel .k {
     font-family: var(--display);
-    font-size: 10px;
-    letter-spacing: .2em;
+    font-size: 12px;
+    letter-spacing: .18em;
     text-transform: uppercase;
-    color: #5C6478;
+    color: #6A7186;
   }
   .tel .v {
     font-family: var(--mono);
-    font-size: clamp(11px, 1.1vw, 13px);
+    font-size: clamp(13px, 1.25vw, 16px);
     font-variant-numeric: tabular-nums;
     color: var(--accent);
     text-align: right;
-    min-width: 130px;
+    min-width: 150px;
     transition: color 1200ms ease;
   }
 
@@ -135,170 +136,40 @@
 
   main {
     display: flex;
-    align-items: flex-end;
-    padding-bottom: clamp(14px, 3vh, 34px);
-    min-height: 0;                       /* lets .copy scroll instead of pushing the rail off */
+    align-items: flex-start;              /* text sits high, just under the header */
+    padding-top: clamp(8px, 2vh, 30px);
+    min-height: 0;
   }
 
   .copy {
-    max-width: 52ch;
+    max-width: 38ch;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    max-height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding-right: 12px;
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--accent) 45%, transparent) transparent;
-  }
-  .copy::-webkit-scrollbar { width: 3px; }
-  .copy::-webkit-scrollbar-track { background: transparent; }
-  .copy::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, var(--accent) 45%, transparent);
-    border-radius: 2px;
   }
 
   .copy > * {
     opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 900ms cubic-bezier(.2,.6,.2,1), transform 900ms cubic-bezier(.2,.6,.2,1);
+    transform: translateY(16px);
+    transition: opacity 800ms cubic-bezier(.2,.6,.2,1), transform 800ms cubic-bezier(.2,.6,.2,1);
   }
-  .copy.in > *          { opacity: 1; transform: none; }
-  .copy.in .eyebrow     { transition-delay: 60ms; }
-  .copy.in .title       { transition-delay: 220ms; }
-  .copy.in .lede        { transition-delay: 480ms; }
-  .copy.in .yield       { transition-delay: 760ms; }
-  .copy.in .more        { transition-delay: 900ms; }
-  .copy.in .deep        { transition-delay: 0ms; }
-  .copy.out > *         { opacity: 0; transform: translateY(-10px); transition-duration: 620ms; transition-delay: 0ms; }
-
-  /* reading mode: the headline yields space to the detail while the panel is open */
-  .copy .title {
-    transition: opacity 900ms cubic-bezier(.2,.6,.2,1),
-                transform 900ms cubic-bezier(.2,.6,.2,1),
-                font-size 340ms ease, margin-bottom 340ms ease;
-  }
-  .copy.reading .eyebrow { margin-bottom: 12px; }
-  .copy.reading .title   { font-size: clamp(1.7rem, 3.1vw, 2.5rem); margin-bottom: 14px; }
-  .copy.reading .lede    { font-size: clamp(.94rem, 1.2vw, 1.02rem); }
-  .copy.reading .more    { margin-top: 18px; }
-
-  /* ---------- glossary ---------- */
-
-  .term {
-    font: inherit;
-    background: none;
-    border: 0;
-    padding: 0;
-    margin: 0;
-    cursor: help;
-    color: color-mix(in oklab, var(--ink) 80%, var(--accent));
-    border-bottom: 1px dotted color-mix(in oklab, var(--accent) 65%, transparent);
-    transition: color 220ms ease, border-color 220ms ease;
-  }
-  .term:hover,
-  .term:focus-visible { color: var(--accent); border-bottom-color: var(--accent); }
-  .term:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; border-radius: 1px; }
-
-  .tip {
-    position: fixed;
-    z-index: 50;
-    max-width: 32ch;
-    background: #0D1018;
-    border: 1px solid #2C3444;
-    border-left: 2px solid var(--accent);
-    color: #CFD4DE;
-    font-family: var(--serif);
-    font-size: 13.5px;
-    line-height: 1.52;
-    padding: 11px 14px;
-    box-shadow: 0 14px 38px rgba(0,0,0,.66);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(4px);
-    transition: opacity 170ms ease, transform 170ms ease, visibility 170ms;
-    pointer-events: none;
-  }
-  .tip.on { opacity: 1; visibility: visible; transform: none; }
-
-  /* ---------- deep dive ---------- */
-
-  .more {
-    align-self: flex-start;
-    flex: none;
-    margin-top: 24px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: none;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-    font-family: var(--display);
-    font-size: 11px;
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    color: var(--accent);
-    transition: opacity 220ms ease;
-  }
-  .more:hover { opacity: .72; }
-  .more:focus-visible { outline: 1px solid var(--accent); outline-offset: 5px; }
-  .more .chev {
-    width: 6px; height: 6px;
-    border-right: 1px solid currentColor;
-    border-bottom: 1px solid currentColor;
-    transform: rotate(45deg);
-    margin-top: -3px;
-    transition: transform 300ms cubic-bezier(.2,.6,.2,1), margin 300ms ease;
-  }
-  .more[aria-expanded="true"] .chev { transform: rotate(-135deg); margin-top: 2px; }
-
-  .deep {
-    margin-top: 20px;
-    padding-left: 20px;
-    padding-right: 14px;
-    border-left: 1px solid color-mix(in oklab, var(--accent) 38%, transparent);
-    max-width: 46ch;
-    display: grid;
-    gap: 13px;
-    font-size: clamp(.9rem, 1.15vw, .97rem);
-    line-height: 1.72;
-    color: #A4AAB9;
-    /* takes whatever height is left over and scrolls inside itself, so the
-       title and lede never leave the screen and only one thing ever scrolls */
-    flex: 0 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    /* soft bottom edge so the cut-off reads as "more below", not as clipping */
-    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in oklab, var(--accent) 45%, transparent) transparent;
-  }
-  .deep::-webkit-scrollbar { width: 3px; }
-  .deep::-webkit-scrollbar-track { background: transparent; }
-  .deep::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, var(--accent) 45%, transparent);
-    border-radius: 2px;
-  }
-  /* author `display` beats the UA's [hidden] rule, so restore it explicitly */
-  .deep[hidden] { display: none; }
-  .deep p { margin: 0; }
-  .deep strong { color: #D4D9E2; font-weight: 400; }
-  .deep:not([hidden]) { animation: deepIn 420ms cubic-bezier(.2,.6,.2,1); }
-  @keyframes deepIn { from { opacity: 0; transform: translateY(-8px); } }
+  .copy.in > *      { opacity: 1; transform: none; }
+  .copy.in .eyebrow { transition-delay: 60ms; }
+  .copy.in .title   { transition-delay: 200ms; }
+  .copy.in .lede    { transition-delay: 420ms; }
+  .copy.in .yield   { transition-delay: 640ms; }
+  .copy.out > *     { opacity: 0; transform: translateY(-12px); transition-duration: 500ms; transition-delay: 0ms; }
 
   .eyebrow {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     font-family: var(--display);
-    font-size: clamp(10px, .95vw, 12px);
-    letter-spacing: .28em;
+    font-size: clamp(13px, 1.15vw, 15px);
+    letter-spacing: .26em;
     text-transform: uppercase;
     color: var(--ink-dim);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
   .eyebrow .idx {
     font-family: var(--mono);
@@ -307,8 +178,8 @@
     transition: color 1200ms ease;
   }
   .eyebrow .bar {
-    flex: 0 0 34px;
-    height: 1px;
+    flex: 0 0 40px;
+    height: 2px;
     background: linear-gradient(to right, var(--accent), transparent);
     transition: background 1200ms ease;
   }
@@ -316,25 +187,25 @@
   .title {
     font-family: var(--display);
     font-weight: 500;
-    font-size: clamp(2.4rem, 6.4vw, 4.9rem);
-    line-height: .96;
+    font-size: clamp(2.8rem, 5.6vw, 4.9rem);
+    line-height: 1;
     letter-spacing: -.02em;
     text-wrap: balance;
     margin: 0 0 22px;
     color: var(--ink);
-    text-shadow: 0 0 68px var(--glow);
+    text-shadow: 0 0 72px var(--glow);
   }
 
   .lede {
-    font-size: clamp(1rem, 1.42vw, 1.17rem);
-    line-height: 1.66;
-    color: #C3C8D2;
+    font-size: clamp(1.2rem, 1.55vw, 1.5rem);
+    line-height: 1.5;
+    color: #DCE0E8;
     margin: 0;
-    max-width: 46ch;
+    max-width: 34ch;
   }
 
   .yield {
-    margin: 26px 0 0;
+    margin: 34px 0 0;
     padding: 0;
     list-style: none;
     display: flex;
@@ -343,27 +214,60 @@
     border-top: 1px solid #2A3040;
   }
   .yield li {
-    padding: 14px 26px 0 0;
-    margin-right: 26px;
+    padding: 18px 30px 0 0;
+    margin-right: 30px;
     border-right: 1px solid #2A3040;
   }
   .yield li:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
   .yield .el {
     display: block;
     font-family: var(--display);
-    font-size: 10px;
-    letter-spacing: .2em;
+    font-size: 13px;
+    letter-spacing: .18em;
     text-transform: uppercase;
-    color: #5C6478;
-    margin-bottom: 5px;
+    color: #838BA0;
+    margin-bottom: 7px;
   }
   .yield .amt {
     font-family: var(--mono);
-    font-size: clamp(.95rem, 1.3vw, 1.1rem);
+    font-size: clamp(1.3rem, 1.7vw, 1.6rem);
     font-variant-numeric: tabular-nums;
     color: var(--accent);
     transition: color 1200ms ease;
   }
+
+  /* ---------- side arrows ---------- */
+
+  .arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 6;
+    width: clamp(56px, 6vw, 84px);
+    height: clamp(56px, 6vw, 84px);
+    display: grid;
+    place-items: center;
+    background: color-mix(in oklab, var(--accent) 8%, #0A0C14);
+    border: 1px solid color-mix(in oklab, var(--accent) 40%, #2A3040);
+    border-radius: 50%;
+    color: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 10px 34px rgba(0,0,0,.5);
+    transition: background 240ms ease, border-color 240ms ease,
+                transform 240ms cubic-bezier(.2,.7,.3,1), opacity 240ms ease;
+  }
+  .arrow-prev { left: clamp(14px, 2.4vw, 40px); }
+  .arrow-next { right: clamp(14px, 2.4vw, 40px); }
+  .arrow svg { width: 46%; height: 46%; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow:hover {
+    background: color-mix(in oklab, var(--accent) 20%, #0A0C14);
+    border-color: var(--accent);
+  }
+  .arrow-prev:hover { transform: translateY(-50%) translateX(-3px); }
+  .arrow-next:hover { transform: translateY(-50%) translateX(3px); }
+  .arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .arrow:disabled { opacity: .28; cursor: default; box-shadow: none; }
+  .arrow:disabled:hover { background: color-mix(in oklab, var(--accent) 8%, #0A0C14); border-color: color-mix(in oklab, var(--accent) 40%, #2A3040); transform: translateY(-50%); }
 
   /* ---------- transport ---------- */
 
@@ -434,60 +338,56 @@
 
   .transport {
     display: flex;
-    align-items: center;
-    gap: 18px;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
   }
 
-  .btn {
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent;
-    border: 1px solid #2C3342;
-    border-radius: 999px;
-    color: var(--ink-dim);
+  .counter {
     font-family: var(--display);
-    font-size: 10px;
-    letter-spacing: .22em;
+    font-size: 14px;
+    letter-spacing: .16em;
     text-transform: uppercase;
-    padding: 9px 18px;
-    cursor: pointer;
-    transition: color 260ms ease, border-color 260ms ease, background 260ms ease;
-  }
-  .btn:hover, .btn:focus-visible {
     color: var(--ink);
-    border-color: var(--accent);
-    background: var(--wash);
-  }
-  .btn:focus-visible { outline: none; }
-
-  .elapsed {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: #4E566A;
     font-variant-numeric: tabular-nums;
-    margin-left: auto;
+  }
+  .hint {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--ink-dim);
   }
 
   /* ---------- responsive ---------- */
 
   @media (max-width: 900px) {
     .tel { min-width: 0; }
-    .tel .v { min-width: 96px; font-size: 11px; }
-    .copy { max-width: none; }
+    .tel .v { min-width: 96px; }
+    .copy { max-width: 34ch; }
     .rail { gap: 4px; }
     .node .nl { display: none; }
     .node { padding-top: 9px; }
+    .lede { max-width: none; }
   }
 
   @media (max-width: 600px) {
+    /* arrows drop to the bottom corners, so the side gutters aren't needed */
+    .shell { padding-left: 22px; padding-right: 22px; }
     header { flex-direction: column; gap: 14px; }
     .tel { justify-items: start; }
-    .tel-row { justify-content: start; grid-template-columns: 92px auto; gap: 10px; }
+    .tel-row { justify-content: start; grid-template-columns: 110px auto; gap: 10px; }
     .tel .v { text-align: left; }
-    main { padding-top: 12px; }
-    .lede { font-size: .98rem; line-height: 1.6; }
-    .yield li { padding-right: 16px; margin-right: 16px; }
-    .elapsed { display: none; }
+    main { padding-top: 10px; }
+    .copy { max-width: none; }
+    .title { font-size: clamp(2.6rem, 12vw, 3.4rem); }
+    .lede { font-size: 1.2rem; line-height: 1.5; max-width: none; }
+    .yield li { padding-right: 18px; margin-right: 18px; }
+    .hint { display: none; }
+    /* keep the arrows clear of the narration on narrow screens */
+    .arrow { top: auto; bottom: 116px; transform: none; width: 54px; height: 54px; }
+    .arrow-prev { left: 22px; }
+    .arrow-next { right: 22px; }
+    .arrow-prev:hover, .arrow-next:hover { transform: none; }
+    .arrow:disabled:hover { transform: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -520,12 +420,18 @@
   <footer>
     <div class="rail" id="rail"></div>
     <div class="transport">
-      <button class="btn" id="playBtn" type="button">Pause</button>
-      <button class="btn" id="replayBtn" type="button">Replay</button>
-      <span class="elapsed" id="elapsed">Stage 1 / 8</span>
+      <span class="counter" id="counter">Stage 1 of 9</span>
+      <span class="hint">Use the arrows, or your ← → keys, to move between stages</span>
     </div>
   </footer>
 </div>
+
+<button class="arrow arrow-prev" id="prevBtn" type="button" aria-label="Previous stage">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20" /></svg>
+</button>
+<button class="arrow arrow-next" id="nextBtn" type="button" aria-label="Next stage">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 L17 12 L9 20" /></svg>
+</button>
 
 <script>
 (() => {
@@ -536,110 +442,60 @@
 
   /* ============================ content ============================ */
 
-  /* definitions surfaced on hover / tap / keyboard focus */
-  const GLOSSARY = {
-    singularity: "A point of infinite density where the known laws of physics stop producing meaningful answers.",
-    inflation: "A brief burst of exponential expansion in the universe's first fraction of a second, stretching space far faster than light can travel through it.",
-    quark: "A fundamental particle that cannot exist alone. Three of them, bound by the strong force, make a proton or a neutron.",
-    strong: "The strongest of the four fundamental forces. It binds quarks into nucleons and holds atomic nuclei together against the electrical repulsion of their protons.",
-    antimatter: "Matter's mirror image — identical mass, opposite charge. When matter and antimatter meet they annihilate into pure energy.",
-    fusion: "Light atomic nuclei slamming together hard enough to form a heavier one, releasing energy. It powers every star.",
-    nucleus: "The dense core of an atom, made of protons and neutrons. It carries almost all the atom's mass.",
-    recombination: "The moment nuclei captured free electrons to form complete neutral atoms, releasing light to travel freely for the first time.",
-    cmb: "Cosmic Microwave Background — the oldest light in existence, released at recombination and still arriving from every direction in the sky.",
-    reionization: "The era when ultraviolet light from the first stars stripped electrons back off the universe's neutral hydrogen.",
-    supernova: "The explosive death of a massive star — the event that forges most heavy elements and scatters them into space.",
-    darkenergy: "The unexplained influence causing cosmic expansion to accelerate. It accounts for roughly 68% of everything in the universe."
-  };
-
-  const gl = (key, text) => `<button type='button' class='term' data-g='${key}'>${text}</button>`;
-
   const STAGES = [
     {
       n: "01", name: "The Singularity", label: "Singularity",
-      time: "t = 0", temp: "> 10³² K", state: "Singularity",
-      body: `Before the Big Bang, space, time, matter and energy did not exist as we know them. The entire universe was packed into a single point called a ${gl("singularity", "singularity")} — infinitely small, infinitely dense, and unimaginably hot.`,
-      deep: `<p>“Singularity” is less a description of an object than a marker for where our theories break down. General relativity, which governs gravity and the very large, predicts infinite density here. Quantum mechanics, which governs the very small, cannot be reconciled with it at that scale.</p>
-             <p>We have no working theory of quantum gravity, so physics genuinely cannot describe t = 0 itself. The Big Bang model properly begins an instant <strong>after</strong> — at the Planck time, roughly 10⁻⁴³ seconds.</p>
-             <p>This is also why “what came before the Big Bang?” may be a malformed question. If time itself began here, there is no “before” for it to refer to.</p>`,
+      time: "The very start", temp: "Hotter than anything", state: "A single point",
+      body: "Before the Big Bang there was no space and no time. Everything that would ever exist was squeezed into a single point far smaller than an atom — unimaginably hot, and packed together beyond belief.",
       accent: "#C39BFF", dur: 12000, sim: 0
     },
     {
-      n: "02", name: "Cosmic Inflation", label: "Inflation",
-      time: "10⁻³⁶ s", temp: "≈ 10²⁷ K", state: "Exponential expansion",
-      body: `A fraction of a second in, the universe underwent a super-charged growth spurt called ${gl("inflation", "cosmic inflation")}. Space itself expanded exponentially — from smaller than a subatomic particle to roughly the size of a soccer ball. The stretching smoothed the universe out and spread its energy evenly.`,
-      deep: `<p>Alan Guth proposed inflation in 1980 to solve three problems the standard model could not.</p>
-             <p><strong>The horizon problem:</strong> opposite sides of the sky sit at the same temperature, despite never having been close enough to exchange heat. <strong>The flatness problem:</strong> the geometry of space is suspiciously, precisely flat. <strong>The monopole problem:</strong> theory predicts magnetic monopoles that nobody can find.</p>
-             <p>Inflation answers all three at once. Regions now impossibly far apart really were in contact before the stretch; the expansion flattened the geometry and diluted exotic relics to nothing.</p>
-             <p>This expansion was faster than light — which is permitted. Nothing travelled <strong>through</strong> space faster than light; space itself expanded, and that carries no speed limit.</p>`,
+      n: "02", name: "The Great Stretch", label: "Inflation",
+      time: "A tiny flash later", temp: "Cooling fast", state: "Space balloons outward",
+      body: "In the tiniest sliver of a second, the universe suddenly ballooned outward — from smaller than a speck to about the size of a beach ball, almost instantly. This huge stretch spread everything out smoothly and evenly.",
       accent: "#7FE9FF", dur: 12500, sim: 1
     },
     {
-      n: "03", name: "Energy Turns to Matter", label: "Matter",
-      time: "10⁻¹² s", temp: "≈ 10¹⁵ K", state: "Energy → matter",
-      body: "As inflation ended the expansion slowed, but the universe was still ferociously hot and filled with pure energy. As it began to cool, that energy transformed into physical matter.",
-      deep: `<p>This is E = mc² running in reverse of the way it is usually quoted. Colliding photons produced pairs of particles — one of matter, one of ${gl("antimatter", "antimatter")} — which promptly annihilated back into photons.</p>
-             <p>As the universe cooled, production stopped but annihilation carried on. By rights matter and antimatter should have cancelled out exactly, leaving a universe of nothing but light.</p>
-             <p>Instead, roughly one particle in a billion survived. That faint asymmetry — called baryogenesis — is every atom that has ever existed, including all of yours. Why it happened remains one of the great unsolved problems in physics.</p>`,
+      n: "03", name: "Energy Becomes Stuff", label: "First matter",
+      time: "Still the first second", temp: "Blazing hot", state: "Energy turns to matter",
+      body: "The universe was still incredibly hot and full of pure energy. As it slowly cooled, some of that energy began turning into the very first tiny bits of solid matter.",
       accent: "#FFD27A", dur: 11500, sim: 2
     },
     {
       n: "04", name: "The Particle Soup", label: "Particle soup",
-      time: "1 s", temp: "≈ 10¹⁰ K", state: "Quarks bind into nucleons",
-      body: `The universe was a searing, dense soup of fundamental particles — ${gl("quark", "quarks")} and electrons. As it cooled further, gravity and the ${gl("strong", "strong nuclear force")} pulled the quarks together, binding them in groups of three to form the first protons and neutrons.`,
-      deep: `<p>Before this, quarks and gluons roamed freely as a state of matter called quark–gluon plasma. Physicists recreate it today by colliding heavy ions at the LHC and RHIC — briefly making the hottest matter ever produced on Earth.</p>
-             <p>Below about 10¹² K, a property called colour confinement set in, and quarks could no longer exist alone. They have been locked inside larger particles ever since.</p>
-             <p>The recipe is simple: a proton is two up quarks and one down. A neutron is one up and two down. That single swap is the whole difference between the two.</p>
-             <p>The strong force behaves unlike any other — it grows <strong>stronger</strong> with distance, like a rubber band. Pull two quarks apart hard enough and the energy creates a new pair rather than letting either go free.</p>`,
+      time: "About 1 second", temp: "Ten billion degrees", state: "First protons form",
+      body: "Everything was a thick, boiling soup of the smallest particles. As it cooled, tiny building blocks called quarks stuck together in threes — forming the first protons and neutrons, the cores of every future atom.",
       accent: "#FF9E6B", dur: 13500, sim: 3
     },
     {
-      n: "05", name: "Cosmic Cooking", label: "Nucleosynthesis",
-      time: "≈ 180 s", temp: "≈ 10⁹ K", state: "Nucleosynthesis",
-      body: `The whole universe behaved like a giant nuclear reactor. Protons and neutrons smashed together and ${gl("fusion", "fused")}, forging the ${gl("nucleus", "nuclei")} of the very first elements.`,
-      yield: [["Hydrogen", "≈ 75%"], ["Helium", "≈ 25%"], ["Lithium", "trace"]],
-      deep: `<p>The whole process lasted about twenty minutes. The window was tight — the universe had to stay hot enough to fuse nuclei, but expansion was cooling it rapidly.</p>
-             <p>It stopped where it did for a specific reason: there is no stable nucleus with a mass of 5 or 8. That gap blocks the road to heavier elements, so the universe froze at hydrogen, helium and a trace of lithium.</p>
-             <p>The predicted helium fraction of about 24% matches what astronomers actually measure, across widely separated parts of the sky. It is one of the strongest pieces of evidence the Big Bang model has.</p>
-             <p>Every element heavier than lithium — the carbon in your cells, the oxygen you breathe, the iron in your blood — had to wait for stars.</p>`,
+      n: "05", name: "Cooking the First Elements", label: "First elements",
+      time: "About 3 minutes", temp: "A billion degrees", state: "Atoms' cores form",
+      body: "The whole universe acted like a giant furnace. Particles crashed together and fused, building the cores of the first elements.",
+      yield: [["Hydrogen", "75%"], ["Helium", "25%"], ["Lithium", "a trace"]],
       accent: "#FFB454", dur: 14500, sim: 4
     },
     {
-      n: "06", name: "Clear Skies, First Light", label: "First light",
-      time: "380,000 yr", temp: "≈ 3,000 °C", state: "Recombination",
-      body: `Until now the universe was an opaque, glowing fog — free electrons scattered light and stopped it travelling. Once the temperature fell to about 3,000 °C, the nuclei finally captured those electrons to form complete, neutral atoms. The fog cleared instantly and light flashed across the universe for the first time. We still detect that ancient light today as the ${gl("cmb", "Cosmic Microwave Background")}.`,
-      deep: `<p>Physicists call this ${gl("recombination", "recombination")}, which is a misnomer — the electrons and nuclei had never been combined before.</p>
-             <p>The afterglow was found by accident. In 1965 Arno Penzias and Robert Wilson could not clear a persistent hiss from their antenna, and suspected the pigeons nesting inside it. The hiss turned out to be the oldest light in the universe, and won them a Nobel Prize.</p>
-             <p>That light has been stretched by expansion from a searing 3,000 K down to just 2.7 K today. It is astonishingly uniform — the same temperature in every direction to within one part in 100,000.</p>
-             <p>Those faint remaining ripples matter enormously. They are the density variations that gravity later grew into every galaxy, star and planet that exists.</p>`,
+      n: "06", name: "The First Light", label: "First light",
+      time: "380,000 years", temp: "About 3,000 °C", state: "The fog clears",
+      body: "Until now the universe was a glowing fog that trapped all light. As it cooled, the particles finally joined into complete atoms — and the fog cleared. Light streamed across space for the very first time. We can still see that ancient glow today.",
       accent: "#FF7E7E", dur: 16500, sim: 5
     },
     {
-      n: "07", name: "The Cosmic Dark Ages", label: "Dark ages",
-      time: "≈ 10⁸ yr", temp: "≈ 60 K", state: "Neutral gas, no stars",
-      body: "With the fog cleared and no stars yet born, the universe entered a period of total darkness. Vast, invisible clouds of hydrogen and helium gas drifted through space.",
-      deep: `<p>This is the least observed era in all of cosmic history. There were no stars to see by, and the ${gl("cmb", "background light")} had already faded out of the visible range.</p>
-             <p>It was not perfectly dark at every wavelength, though. Neutral hydrogen emits a faint radio signal at 21 centimetres, and radio observatories such as LOFAR — and the future Square Kilometre Array — are built specifically to hunt for it.</p>
-             <p>The dark ages ended with ${gl("reionization", "reionization")}: as the first stars switched on, their ultraviolet light stripped the electrons back off the hydrogen that had captured them, and the universe became transparent to that light too.</p>`,
+      n: "07", name: "The Dark Ages", label: "Dark ages",
+      time: "Millions of years", temp: "Cold and quiet", state: "No stars yet",
+      body: "There were still no stars anywhere. The universe was dark and silent — huge invisible clouds of gas drifting slowly through empty space.",
       accent: "#6E7C99", dur: 11500, sim: 6
     },
     {
-      n: "08", name: "Gravity Ignites the Stars", label: "First stars",
-      time: "> 10⁸ yr", temp: "core ≈ 10⁷ K", state: "First stars & galaxies",
-      body: `Over millions of years gravity drew those massive gas clouds tighter and tighter. Their centres grew hotter and denser until nuclear ${gl("fusion", "fusion")} ignited — lighting the very first stars, and with them the first galaxies.`,
-      deep: `<p>Astronomers call these Population III stars, and they were unlike anything alive today. With no heavy elements to help the gas shed heat and break into smaller fragments, the clouds collapsed whole — producing stars possibly hundreds of times the mass of the Sun.</p>
-             <p>They burned furiously and died young, lasting only a few million years before detonating as ${gl("supernova", "supernovae")}. Those explosions forged the first heavy elements and blew them out into space, seeding everything that came after.</p>
-             <p>Not one has ever been directly observed. They are a prediction, and finding them is a headline goal for the James Webb Space Telescope.</p>
-             <p>Some may not have exploded at all, collapsing straight into black holes instead — a plausible origin for the supermassive black holes now sitting at the centre of nearly every galaxy.</p>`,
+      n: "08", name: "The First Stars Switch On", label: "First stars",
+      time: "100 million years", temp: "Cores reignite", state: "Stars and galaxies",
+      body: "Gravity slowly pulled the gas clouds together. Their centres grew hotter and denser until they suddenly caught fire — the first stars switched on, lighting up the darkness and forming the first galaxies.",
       accent: "#A8CBFF", dur: 15000, sim: 7
     },
     {
-      n: "09", name: "Everything Since", label: "Everything since",
-      time: "13.8 billion yr", temp: "2.7 K", state: "Galaxies, stars, and us",
-      body: `Generation after generation of stars lived, died and enriched the gas around them with heavier elements. About nine billion years in, one ordinary cloud on the edge of one ordinary galaxy collapsed into our Sun — and the atoms left over formed the Earth, and eventually you.`,
-      deep: `<p>The carbon in your cells, the oxygen in your lungs and the iron in your blood were all forged inside stars that lived and died before the Sun existed. You are made of the debris of ${gl("supernova", "supernovae")}.</p>
-             <p>The universe is now 13.8 billion years old and contains something like two trillion galaxies. It is still expanding — and since roughly five billion years ago, that expansion has been speeding up, driven by ${gl("darkenergy", "dark energy")} that nobody can yet explain.</p>
-             <p>The light released back at stage 06 is still arriving. It is falling on you right now, from every direction, having travelled for 13.8 billion years to get here. Point an untuned television at the sky and a small fraction of the static is the Big Bang itself.</p>`,
+      n: "09", name: "Everything Since — and You", label: "Everything since",
+      time: "13.8 billion years", temp: "Cold, but full of light", state: "Galaxies, stars, and us",
+      body: "Stars were born and died over and over, each one making new elements. Around nine billion years later, one gas cloud collapsed into our Sun — and the leftover dust became the Earth, and eventually, you.",
       accent: "#FFD9A0", dur: 17000, sim: 8
     }
   ];
@@ -1225,17 +1081,16 @@
 
   const copyEl   = document.getElementById("copy");
   const railEl   = document.getElementById("rail");
-  const playBtn  = document.getElementById("playBtn");
-  const replayBtn= document.getElementById("replayBtn");
-  const elapsedEl= document.getElementById("elapsed");
+  const counterEl= document.getElementById("counter");
+  const prevBtn  = document.getElementById("prevBtn");
+  const nextBtn  = document.getElementById("nextBtn");
   const tTime    = document.getElementById("tTime");
   const tTemp    = document.getElementById("tTemp");
   const tState   = document.getElementById("tState");
+  const LAST     = STAGES.length - 1;
 
   let stage = -1;
   let stageStart = 0;
-  let playing = true;
-  let outFired = false;
   let raf = 0;
 
   /* build the rail once */
@@ -1246,11 +1101,7 @@
     b.type = "button";
     b.innerHTML = `<span class="nn">${s.n}</span><span class="nl">${s.label}</span>`;
     b.setAttribute("aria-label", `Stage ${s.n}: ${s.name}`);
-    b.addEventListener("click", () => {          /* jumping to a stage means you want to watch it */
-      playing = true;
-      playBtn.textContent = "Pause";
-      go(i);
-    });
+    b.addEventListener("click", () => go(i));
     railEl.appendChild(b);
     return b;
   });
@@ -1260,177 +1111,68 @@
       ? `<ul class="yield">${s.yield.map(([el, amt]) =>
           `<li><span class="el">${el}</span><span class="amt">${amt}</span></li>`).join("")}</ul>`
       : "";
-    const d = s.deep
-      ? `<button class="more" type="button" aria-expanded="false" aria-controls="deep">` +
-          `<span class="chev" aria-hidden="true"></span><span class="more-l">Read more</span>` +
-        `</button>` +
-        `<div class="deep" id="deep" hidden>${s.deep}</div>`
-      : "";
-    hideTip();
     copyEl.className = "copy";
-    copyEl.scrollTop = 0;
     copyEl.innerHTML =
       `<div class="eyebrow"><span class="idx">${s.n}</span><span class="bar"></span><span>${s.time}</span></div>` +
       `<h2 class="title">${s.name}</h2>` +
-      `<p class="lede">${s.body}</p>` + y + d;
+      `<p class="lede">${s.body}</p>` + y;
     requestAnimationFrame(() => requestAnimationFrame(() => copyEl.classList.add("in")));
   }
 
-  /* ---- glossary tooltip: rendered on <body> so the scrolling copy can't clip it ---- */
-
-  const tip = document.createElement("div");
-  tip.className = "tip";
-  tip.setAttribute("role", "tooltip");
-  document.body.appendChild(tip);
-
-  function showTip(el) {
-    const def = GLOSSARY[el.dataset.g];
-    if (!def) return;
-    tip.textContent = def;
-    tip.classList.add("on");
-    const r = el.getBoundingClientRect();
-    const w = tip.offsetWidth, h = tip.offsetHeight;
-    let L = r.left + r.width / 2 - w / 2;
-    L = Math.max(12, Math.min(L, window.innerWidth - w - 12));
-    let T = r.top - h - 10;
-    if (T < 12) T = r.bottom + 10;                 /* flip below when there's no room above */
-    tip.style.left = L + "px";
-    tip.style.top = T + "px";
+  /* the rail node's fill (::after width can't be set inline, so drive it through a style tag) */
+  const fillStyle = document.createElement("style");
+  document.head.appendChild(fillStyle);
+  function setFill(i) {
+    /* completed stages fill fully; the current one shows as the live edge */
+    fillStyle.textContent = `.node:nth-child(${i + 1})::after{width:100%}`;
   }
-  function hideTip() { tip.classList.remove("on"); }
-
-  copyEl.addEventListener("mouseover", e => {
-    const t = e.target.closest(".term");
-    if (t) showTip(t);
-  });
-  copyEl.addEventListener("mouseout", e => {
-    if (e.target.closest(".term")) hideTip();
-  });
-  copyEl.addEventListener("focusin", e => {
-    const t = e.target.closest(".term");
-    if (t) showTip(t);
-  });
-  copyEl.addEventListener("focusout", e => {
-    if (e.target.closest(".term")) hideTip();
-  });
-  /* capture, because scroll doesn't bubble up from the deep panel */
-  copyEl.addEventListener("scroll", hideTip, { capture: true, passive: true });
-  window.addEventListener("scroll", hideTip, { passive: true });
-
-  /* ---- deep-dive disclosure: opening pauses so the sequence can't advance mid-read ---- */
-
-  let wasPlaying = true;
-
-  copyEl.addEventListener("click", e => {
-    const term = e.target.closest(".term");
-    if (term) {                                    /* tap-to-define on touch devices */
-      if (tip.classList.contains("on")) hideTip(); else showTip(term);
-      return;
-    }
-    const btn = e.target.closest(".more");
-    if (!btn) return;
-
-    const panel = copyEl.querySelector(".deep");
-    const open = btn.getAttribute("aria-expanded") === "true";
-
-    if (open) {
-      btn.setAttribute("aria-expanded", "false");
-      panel.hidden = true;
-      copyEl.classList.remove("reading");
-      btn.querySelector(".more-l").textContent = "Read more";
-      if (wasPlaying) { playing = true; playBtn.textContent = "Pause"; }
-    } else {
-      wasPlaying = playing;
-      playing = false;
-      playBtn.textContent = "Play";
-      btn.setAttribute("aria-expanded", "true");
-      panel.hidden = false;
-      copyEl.classList.add("reading");
-      btn.querySelector(".more-l").textContent = "Close";
-    }
-  });
 
   function go(i) {
+    i = Math.max(0, Math.min(LAST, i));
     stage = i;
     const s = STAGES[i];
-    stageStart = performance.now();
-    outFired = false;
+    stageStart = performance.now();       /* each visit replays this stage's animation */
 
     document.documentElement.style.setProperty("--accent", s.accent);
     tTime.textContent  = s.time;
     tTemp.textContent  = s.temp;
     tState.textContent = s.state;
-    elapsedEl.textContent = `Stage ${i + 1} / ${STAGES.length}`;
+    counterEl.textContent = `Stage ${i + 1} of ${STAGES.length}`;
+
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === LAST;
 
     nodes.forEach((n, k) => {
       n.classList.toggle("active", k === i);
-      n.classList.toggle("done", k < i);
+      n.classList.toggle("done", k <= i);
       n.querySelector(".nn").style.opacity = k <= i ? "1" : ".55";
     });
+    setFill(i);
 
     paintCopy(s);
     initSim(i);
-    if (REDUCED) render(s.sim, 0.7, performance.now());   /* one held frame, no churn */
+    if (REDUCED) render(s.sim, 0.75, performance.now());   /* one held frame, no churn */
   }
 
+  /* no timer, no auto-advance — the animation just plays out and holds on its final
+     frame while the reader stays as long as they like */
   function tick(now) {
     raf = requestAnimationFrame(tick);
+    if (REDUCED) return;
     const s = STAGES[stage];
     const t = clamp01((now - stageStart) / s.dur);
-
-    if (!REDUCED) render(s.sim, t, now);
-
-    setFill(stage, t);
-
-    const isLast = stage === STAGES.length - 1;
-
-    if (playing) {
-      /* the closing stage keeps its text — there is nothing to hand off to */
-      if (t > 0.93 && !outFired && !isLast) { copyEl.classList.add("out"); outFired = true; }
-      if (t >= 1) {
-        if (!isLast) go(stage + 1);
-        else { playing = false; playBtn.textContent = "Play"; nodes[stage].classList.add("done"); }
-      }
-    } else if (t >= 1) {
-      stageStart = now - s.dur;   /* hold at the end of the stage while paused */
-    }
+    render(s.sim, t, now);
+    if (t >= 1) stageStart = now - s.dur;                  /* pin at the end, keep ambient motion */
   }
 
-  /* the active node's progress fill (::after width can't be set inline, so use a CSS var proxy) */
-  const fillStyle = document.createElement("style");
-  document.head ? document.head.appendChild(fillStyle) : document.body.appendChild(fillStyle);
-  function setFill(i, t) {
-    fillStyle.textContent = `.node:nth-child(${i + 1})::after{width:${(t * 100).toFixed(1)}%}`;
-  }
-
-  playBtn.addEventListener("click", () => {
-    if (!playing && stage === STAGES.length - 1 &&
-        (performance.now() - stageStart) / STAGES[stage].dur >= 1) {
-      go(0); playing = true; playBtn.textContent = "Pause"; return;
-    }
-    playing = !playing;
-    playBtn.textContent = playing ? "Pause" : "Play";
-    /* paused mid-fade: bring the text back so it can still be read */
-    if (!playing && outFired) {
-      copyEl.classList.remove("out");
-      outFired = false;
-      stageStart = performance.now() - STAGES[stage].dur * 0.90;
-    }
-  });
-
-  replayBtn.addEventListener("click", () => {
-    playing = true;
-    playBtn.textContent = "Pause";
-    go(0);
-  });
+  prevBtn.addEventListener("click", () => go(stage - 1));
+  nextBtn.addEventListener("click", () => go(stage + 1));
 
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") { hideTip(); return; }
-    /* don't hijack space while a button has focus — it should activate that button */
-    const onButton = e.target instanceof Element && e.target.closest("button");
-    if (e.key === " " && !onButton) { e.preventDefault(); playBtn.click(); }
-    else if (e.key === "ArrowRight" && stage < STAGES.length - 1) go(stage + 1);
-    else if (e.key === "ArrowLeft" && stage > 0) go(stage - 1);
+    if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); go(stage + 1); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(stage - 1); }
+    else if (e.key === "Home") { e.preventDefault(); go(0); }
+    else if (e.key === "End") { e.preventDefault(); go(LAST); }
   });
 
   window.addEventListener("resize", resize);
