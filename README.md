@@ -1,9 +1,8 @@
 # The Big Bang — Nine Stages of Everything
 
 A visual walkthrough of the Big Bang, from the singularity to the first
-stars and on to today, using the standard names for each cosmological
-epoch alongside plain-language explanations. You move through it at your
-own pace — nothing is timed.
+stars and on to today, in plain language. You move through it at your own
+pace — nothing is timed.
 
 Open `index.html` in a browser — no build step, no dependencies.
 
@@ -13,13 +12,13 @@ Open `index.html` in a browser — no build step, no dependencies.
 |---|-------|-------------|
 | 01 | The Singularity | t = 0 |
 | 02 | Cosmic Inflation | 10⁻³⁶ s |
-| 03 | Baryogenesis | 10⁻¹² s |
-| 04 | The Hadron Epoch | 1 s |
-| 05 | Nucleosynthesis | ≈ 3 min |
-| 06 | Recombination | 380,000 yr |
+| 03 | Energy Turns to Matter | 10⁻¹² s |
+| 04 | The Particle Soup | 1 s |
+| 05 | Cosmic Cooking | ≈ 3 min |
+| 06 | First Light | 380,000 yr |
 | 07 | The Dark Ages | ≈ 100 million yr |
-| 08 | Cosmic Dawn | > 100 million yr |
-| 09 | Today | 13.8 billion yr |
+| 08 | Gravity Ignites the Stars | > 100 million yr |
+| 09 | Everything Since | 13.8 billion yr |
 
 Each stage runs its own animation, and the page's accent colour tracks the
 temperature of the universe at that moment — violet-hot at the singularity,
